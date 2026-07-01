@@ -32,11 +32,12 @@ async def test_onboarding_walks_beats_and_reaches_play(tmp_path, monkeypatch):
     monkeypatch.setattr(config, "GAMES_DIR", tmp_path)
     captured: dict = {}
 
-    def fake_create(slug, inputs):
+    def fake_create(slug, inputs, role=None):
         # Mirror create_game's observable effect: a real game on disk + opening prose,
         # without any model call, so load_session(slug) works downstream.
         captured["slug"] = slug
         captured["inputs"] = inputs
+        captured["role"] = role
         game_files.new_game_from_templates(slug)
         return "안개가 걷히고, 늪의 가장자리가 드러난다."
 
@@ -69,6 +70,8 @@ async def test_onboarding_walks_beats_and_reaches_play(tmp_path, monkeypatch):
         # Slug derived from the name; the game was scaffolded on disk.
         assert captured["slug"] == "lyra"
         assert config.game_dir("lyra").exists()
+        # Creation honors the configured scribe role (not the hardcoded Haiku default).
+        assert captured["role"] == screen._settings.scribe
 
         # PlayScreen reached, opening scene seeded as the first narration block.
         assert isinstance(app.screen, PlayScreen)
@@ -99,7 +102,7 @@ async def test_onboarding_failure_retry_reuses_slug(tmp_path, monkeypatch):
     monkeypatch.setattr(config, "GAMES_DIR", tmp_path)
     call_slugs: list[str] = []
 
-    def fake_create(slug, inputs):
+    def fake_create(slug, inputs, role=None):
         call_slugs.append(slug)
         if len(call_slugs) == 1:
             raise RuntimeError("모델 오류")
@@ -147,7 +150,7 @@ async def test_name_ack_shown_before_concept_prompt(tmp_path, monkeypatch):
     """After submitting the name beat, the #beat Static must contain the echoed
     name ack AND the next (concept) prompt text."""
     monkeypatch.setattr(config, "GAMES_DIR", tmp_path)
-    screen = OnboardingScreen(create=lambda slug, inputs: "")
+    screen = OnboardingScreen(create=lambda slug, inputs, role=None: "")
     app = _Host(screen)
     async with app.run_test() as pilot:
         await pilot.pause()

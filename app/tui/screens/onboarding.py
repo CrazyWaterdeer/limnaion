@@ -147,7 +147,10 @@ class OnboardingScreen(Screen):
     @work(thread=True, exclusive=True)
     def _run_create(self, slug: str, inputs: onboarding.OnboardingInputs) -> None:
         try:
-            opening = self._create(slug, inputs)
+            # Character/world creation follows the configured scribe role (a
+            # structured-generation task), so it honors the F3 model setting
+            # instead of always using the built-in Haiku default.
+            opening = self._create(slug, inputs, role=self._settings.scribe)
             self.post_message(OnboardingCreated(slug, opening))
         except Exception as exc:  # noqa: BLE001 - surface any creation failure
             self.post_message(OnboardingFailed(str(exc)))
