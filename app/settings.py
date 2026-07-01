@@ -32,7 +32,11 @@ DEFAULT_THEME = "gruvbox"
 DEFAULT_FROG_TONE = "bookends"
 
 # (label, value) options per provider for the settings dropdowns.
-CLAUDE_MODELS = [("Opus", config.CLAUDE_OPUS), ("Sonnet", config.CLAUDE_SONNET), ("Haiku", config.CLAUDE_HAIKU)]
+CLAUDE_MODELS = [
+    ("Opus 4.8", config.CLAUDE_OPUS),
+    ("Sonnet 5", config.CLAUDE_SONNET),
+    ("Haiku 4.5", config.CLAUDE_HAIKU),
+]
 # Curated current OpenRouter slugs (validated against the live /api/v1/models on
 # 2026-07-01). The catalog moves fast; settings.toml accepts any slug, and the
 # load_settings path keeps a saved model even if it is not in this list.

@@ -28,7 +28,7 @@ TEMPLATES_DIR: Path = _DATA / "templates"
 # ---------------------------------------------------------------------------
 
 CLAUDE_OPUS: str = "claude-opus-4-8"
-CLAUDE_SONNET: str = "claude-sonnet-4-6"
+CLAUDE_SONNET: str = "claude-sonnet-5"    # current flagship Sonnet (2026-06-30)
 CLAUDE_HAIKU: str = "claude-haiku-4-5-20251001"
 CLAUDE_MODEL: str = CLAUDE_HAIKU          # keep this name; existing refs use it
 OPENROUTER_BASE_URL: str = "https://openrouter.ai/api/v1"
