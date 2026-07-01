@@ -70,12 +70,23 @@ def _claude_cwd() -> str:
 
 
 def _claude_child_env() -> dict[str, str]:
-    """Child env for `claude -p`: drop ANTHROPIC_API_KEY / ANTHROPIC_AUTH_TOKEN so the
-    CLI uses the cached claude.ai OAuth login instead of pay-as-you-go API billing."""
+    """Child env for `claude -p`. Two groups are stripped:
+
+    - ANTHROPIC_API_KEY / ANTHROPIC_AUTH_TOKEN — so the CLI uses the cached claude.ai
+      OAuth login instead of pay-as-you-go API billing.
+    - the parent Claude Code session vars (CLAUDE_CODE_*, CLAUDE_EFFORT,
+      CLAUDE_PLUGIN_DATA). If they leak in, the child `claude -p` runs as a NESTED
+      session — markedly slower and prone to agentic behaviour (asking clarifying
+      questions instead of answering), which breaks the JSON contract and hits the
+      timeout. Measured: stripping them cut a creator-sized call from ~60s to ~21s and
+      turned a clarifying question into clean JSON. Only present when the app is itself
+      launched from inside a Claude Code session; a harmless no-op otherwise.
+    """
+    drop = {"ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_EFFORT", "CLAUDE_PLUGIN_DATA"}
     return {
         k: v
         for k, v in os.environ.items()
-        if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN")
+        if k not in drop and not k.startswith("CLAUDE_CODE_")
     }
 
 

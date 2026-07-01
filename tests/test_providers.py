@@ -42,6 +42,12 @@ def test_claude_complete_builds_argv_and_returns_stdout(monkeypatch):
     # in the child env, so it uses the claude.ai login, not API billing.
     monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-should-be-stripped")
     monkeypatch.setenv("ANTHROPIC_AUTH_TOKEN", "tok-should-be-stripped")
+    # Parent Claude Code session vars must ALSO be stripped so the child `claude -p`
+    # runs as a fresh session (leaking them makes it slow + agentic).
+    monkeypatch.setenv("CLAUDE_CODE_SESSION_ID", "parent-session")
+    monkeypatch.setenv("CLAUDE_CODE_CHILD_SESSION", "1")
+    monkeypatch.setenv("CLAUDE_EFFORT", "high")
+    monkeypatch.setenv("CLAUDE_PLUGIN_DATA", "{}")
     captured = {}
 
     def fake_run(argv, **kwargs):
@@ -68,6 +74,10 @@ def test_claude_complete_builds_argv_and_returns_stdout(monkeypatch):
     assert kwargs["timeout"] == config.MODEL_TIMEOUT
     assert "ANTHROPIC_API_KEY" not in kwargs["env"]
     assert "ANTHROPIC_AUTH_TOKEN" not in kwargs["env"]
+    assert "CLAUDE_CODE_SESSION_ID" not in kwargs["env"]
+    assert "CLAUDE_CODE_CHILD_SESSION" not in kwargs["env"]
+    assert "CLAUDE_EFFORT" not in kwargs["env"]
+    assert "CLAUDE_PLUGIN_DATA" not in kwargs["env"]
 
 
 # ---- claude_stream ----------------------------------------------------------

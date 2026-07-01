@@ -40,7 +40,7 @@ SCRIBE: RoleConfig = RoleConfig("claude-subscription", CLAUDE_HAIKU)
 RECENT_TURNS_K: int = 6
 LOG_COMPRESS_THRESHOLD: int = 20
 UNDO_SNAPSHOTS: int = 5  # per-game turn snapshots retained for Ctrl+Z undo
-MODEL_TIMEOUT: int = 90
+MODEL_TIMEOUT: int = 150  # per model call; creator/narration via `claude -p` can take 20-60s+
 
 # ---------------------------------------------------------------------------
 # GAMES_DIR — resolved once at import time; tests override via monkeypatch
