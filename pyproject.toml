@@ -1,0 +1,58 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "limnaion"
+version = "0.1.0"
+description = "A terminal text-TRPG game-master framework with a Textual TUI."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
+authors = [{ name = "Jin" }]
+keywords = ["trpg", "tui", "textual", "game-master", "terminal", "rpg"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Games/Entertainment :: Role-Playing",
+]
+dependencies = [
+    "textual>=8.2,<9",
+    "openai",
+    "platformdirs",
+    "tomli-w",
+]
+
+[project.optional-dependencies]
+web = ["textual-serve", "textual-web"]
+
+[project.scripts]
+limnaion = "app.main:limnaion"
+
+[project.urls]
+Homepage = "https://github.com/jin/limnaion"
+Repository = "https://github.com/jin/limnaion"
+
+# Wheel: ship the flat-layout `app` package. Everything inside app/ — including
+# app/data/engine.md and app/data/templates/*.md (moved there in Task 2) — is
+# carried along as package data, so the installed command can resolve them via
+# app/config.py's _DATA = Path(__file__).resolve().parent / "data".
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+# Source distribution: include the package plus the Unix dice CLI, the Windows
+# launcher assets, and the legal/readme files.
+[tool.hatch.build.targets.sdist]
+include = [
+    "app/",
+    "scripts/",
+    "launcher/",
+    "README.md",
+    "LICENSE",
+]

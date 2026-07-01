@@ -1,0 +1,14 @@
+__pycache__/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+
+# Dev scratch (SDD ledger/briefs/reports) — not for distribution
+.superpowers/
+# Saved games are per-user data (platformdirs); never bundle personal playthroughs
+games/
+# Internal AI-assisted development records (plans/specs) — not for publication
+docs/superpowers/
+# Personal WSL launch script (has machine-specific paths); .example is the template
+launcher/limnaion.sh

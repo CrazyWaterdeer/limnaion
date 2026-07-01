@@ -1,0 +1,5 @@
+[app.limnaion]
+name = "Limnaion"
+slug = "limnaion"
+# For a dev checkout use: uv run --project /path/to/your/uv-env python -m app.main tui
+command = "python -m app.main tui"

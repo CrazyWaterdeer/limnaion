@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Limnaion WSL launch script (TEMPLATE) — copy to launcher/limnaion.sh and edit
+# the two paths for your machine, then point a Windows desktop shortcut at it via:
+#   wt.exe wsl.exe -d <YourDistro> -- bash -lc /path/to/your/limnaion/launcher/limnaion.sh
+# Runs the TUI from a dev checkout using the uv-managed env.
+set -e
+cd /path/to/your/limnaion              # your repo checkout
+exec uv run --project /path/to/your/uv-env python -m app.main tui
